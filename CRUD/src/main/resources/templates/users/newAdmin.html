@@ -2,16 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New person</title>
+    <title>New admin</title>
 </head>
 
 <body>
-Create new user
+Create new admin
 </body>
 
 <body>
 
-<form th:method="POST" th:action="@{/users/new}" th:object="${user}">
+<form th:method="POST" th:action="@{/users/new/admin}" th:object="${user}">
     <label for="login">Enter login: </label>
     <input type="text" th:field="*{login}" id="login"/>
     <br/>

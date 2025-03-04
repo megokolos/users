@@ -21,7 +21,7 @@ public class UsersServiceImp implements UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public List<User> findAll() {
         return usersRepository.findAll();
@@ -50,7 +50,7 @@ public class UsersServiceImp implements UsersService {
     }
 
     @Transactional
-    public void delete (Long id) {
+    public void delete(Long id) {
         usersRepository.deleteById(id);
     }
 

@@ -17,13 +17,8 @@ public class UsersController {
 
     @GetMapping
     public String showAll(Model model) {
-        model.addAttribute("users" ,usersService.findAll());
+        model.addAttribute("users", usersService.findAll());
         return "users/index";
-    }
-
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
-        return "users/new";
     }
 
     @GetMapping("/{id}")
@@ -32,8 +27,26 @@ public class UsersController {
         return "users/show";
     }
 
+    @GetMapping("/new")
+    public String newUser(@ModelAttribute("user") User user) {
+        return "users/new";
+    }
+
     @PostMapping("/new")
     public String create(@ModelAttribute("user") User user) {
+        user.setRole("ROLE_USER");
+        usersService.save(user);
+        return "redirect:/users/" + user.getId();
+    }
+
+    @GetMapping("/new/admin")
+    public String newAdmin(@ModelAttribute("user") User user) {
+        return "users/newAdmin";
+    }
+
+    @PostMapping("/new/admin")
+    public String createAdmin(@ModelAttribute("user") User user) {
+        user.setRole("ROLE_ADMIN");
         usersService.save(user);
         return "redirect:/users";
     }

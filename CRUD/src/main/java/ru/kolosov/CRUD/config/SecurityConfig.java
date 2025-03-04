@@ -15,26 +15,33 @@ import ru.kolosov.CRUD.service.UsersService;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private CustomSuccessHandler successHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(customizer -> customizer.disable())
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/users/new").permitAll()
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/users").hasRole("ADMIN")
+                        .requestMatchers("/users/new/**", "/logout").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/process_login")
-                        .defaultSuccessUrl("/users", true)
+                        .successHandler(successHandler)
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll);
+                .logout(logoutConfigurer -> logoutConfigurer
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"));
 
         return http.build();
     }
@@ -46,4 +53,6 @@ public class SecurityConfig{
         provider.setUserDetailsService(usersService);
         return provider;
     }
+
+
 }

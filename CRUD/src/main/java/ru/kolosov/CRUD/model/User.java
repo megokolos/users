@@ -3,6 +3,8 @@ package ru.kolosov.CRUD.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -27,4 +29,6 @@ public class User {
     private String login;
     @NonNull
     private String password;
+    @NonNull
+    private String role;
 }
