@@ -2,10 +2,14 @@ package ru.kolosov.CRUD.service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.Role;
-import ru.kolosov.CRUD.model.User;
+
+import java.util.List;
+
 
 public interface RolesService {
     Role findByRole(String name);
+
+    List<Role> findAll();
 
     @Transactional
     void save(Role role);

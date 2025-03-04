@@ -7,6 +7,9 @@ import ru.kolosov.CRUD.model.Role;
 import ru.kolosov.CRUD.model.User;
 import ru.kolosov.CRUD.repository.RolesRepository;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 @Transactional(readOnly = true)
 public class RolesServiceImp implements RolesService{
@@ -18,6 +21,11 @@ public class RolesServiceImp implements RolesService{
     @Override
     public Role findByRole(String name) {
         return rolesRepository.findByRole(name);
+    }
+
+    @Override
+    public List<Role> findAll() {
+        return rolesRepository.findAll();
     }
 
     @Override

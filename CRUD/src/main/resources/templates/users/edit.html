@@ -25,6 +25,13 @@
     <label for="email">Enter email: </label>
     <input type="text" th:field="*{email}" id="email"/>
     <br/>
+    <label>Роли:</label>
+    <div th:each="role : ${allRoles}">
+        <label>
+            <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />
+            <span th:text="${role.getRole()}"></span>
+        </label>
+    </div>
     <input type="submit" value="Update!"/>
 </form>
 <form th:action="@{/logout}" th:method="GET">

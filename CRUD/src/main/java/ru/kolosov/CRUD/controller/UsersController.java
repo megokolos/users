@@ -74,6 +74,7 @@ public class UsersController {
     @GetMapping("/admin/users/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
         model.addAttribute("user", usersService.findById(id));
+        model.addAttribute("allRoles", rolesService.findAll());
         return "users/edit";
     }
 
