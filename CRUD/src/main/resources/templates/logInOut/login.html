@@ -80,6 +80,9 @@
     </form>
 
     <a href="/users/new" class="btn btn-secondary">Create New User</a>
+    <form th:action="@{/logout}" th:method="GET">
+        <input type="submit" value="Logout" />
+    </form>
 </div>
 
 </body>

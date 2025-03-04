@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.getId()})}" th:object="${user}">
     <label for="login">Enter login: </label>
     <input type="text" th:field="*{login}" id="login"/>
     <br/>
@@ -26,6 +26,9 @@
     <input type="text" th:field="*{email}" id="email"/>
     <br/>
     <input type="submit" value="Update!"/>
+</form>
+<form th:action="@{/logout}" th:method="GET">
+    <input type="submit" value="Logout" />
 </form>
 
 </body>

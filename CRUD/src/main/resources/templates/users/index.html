@@ -67,8 +67,8 @@
         <td th:text="${user.getAge()}"></td>
         <td th:text="${user.getEmail()}"></td>
         <td class="actions">
-            <a th:href="@{/users/{id}/edit(id=${user.getId()})}" class="btn edit-btn">Edit</a>
-            <form th:action="@{/users/{id}(id=${user.getId()})}" method="post" style="display:inline;">
+            <a th:href="@{/admin/users/{id}/edit(id=${user.getId()})}" class="btn edit-btn">Edit</a>
+            <form th:action="@{/admin/users/{id}(id=${user.getId()})}" method="post" style="display:inline;">
                 <input type="hidden" name="_method" value="delete">
                 <button type="submit" class="btn delete-btn">Delete</button>
             </form>
@@ -77,6 +77,8 @@
 </table>
 
 <a href="/users/new" class="btn create-btn">Create New User</a>
-
+<form th:action="@{/logout}" th:method="GET">
+    <input type="submit" value="Logout" />
+</form>
 </body>
 </html>

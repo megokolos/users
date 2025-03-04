@@ -11,7 +11,6 @@ import ru.kolosov.CRUD.service.UsersService;
 
 
 @Controller
-@RequestMapping("/users")
 public class UsersController {
 
     @Autowired
@@ -20,27 +19,27 @@ public class UsersController {
     @Autowired
     private RolesService rolesService;
 
-    @GetMapping
+    @GetMapping("/admin/users")
     public String showAll(Model model) {
         model.addAttribute("users", usersService.findAll());
         return "users/index";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", usersService.findById(id));
         return "users/show";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/users/new")
     public String newUser(@ModelAttribute("user") User user) {
         return "users/new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/users/new")
     public String create(@ModelAttribute("user") User user) {
         Role userRole = rolesService.findByRole("ROLE_USER");
-        if (userRole==null) {
+        if (userRole == null) {
             userRole = new Role("ROLE_USER");
             rolesService.save(userRole);
         }
@@ -49,45 +48,45 @@ public class UsersController {
         return "redirect:/users/" + user.getId();
     }
 
-    @GetMapping("/new/admin")
+    @GetMapping("/users/new/admin")
     public String newAdmin(@ModelAttribute("user") User user) {
         return "users/newAdmin";
     }
 
-    @PostMapping("/new/admin")
+    @PostMapping("/users/new/admin")
     public String createAdmin(@ModelAttribute("user") User user) {
         Role userRoleAdmin = rolesService.findByRole("ROLE_ADMIN");
-        if (userRoleAdmin==null) {
+        if (userRoleAdmin == null) {
             userRoleAdmin = new Role("ROLE_ADMIN");
             rolesService.save(userRoleAdmin);
         }
         Role userRoleUser = rolesService.findByRole("ROLE_USER");
-        if (userRoleUser==null) {
+        if (userRoleUser == null) {
             userRoleUser = new Role("ROLE_USER");
             rolesService.save(userRoleUser);
         }
         user.getRoles().add(userRoleAdmin);
         user.getRoles().add(userRoleUser);
         usersService.save(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/admin/users/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
         model.addAttribute("user", usersService.findById(id));
         return "users/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/admin/users/{id}")
     public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") Long id) {
         usersService.update(id, user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/users/{id}")
     public String delete(@PathVariable("id") Long id) {
         usersService.delete(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 }
