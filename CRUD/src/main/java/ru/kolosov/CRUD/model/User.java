@@ -46,7 +46,7 @@ public class User {
     private String password;
     @NonNull
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER) // Загружаем роли сразу
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
