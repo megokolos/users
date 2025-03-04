@@ -15,7 +15,7 @@ public interface UsersService extends UserDetailsService{
 
     User findById(Long id);
 
-    Optional<User> findByLogin(String login);
+    User findByLogin(String login);
 
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 

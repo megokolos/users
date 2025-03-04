@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import ru.kolosov.CRUD.model.Role;
 import ru.kolosov.CRUD.model.User;
 import ru.kolosov.CRUD.service.UsersService;
 
@@ -22,12 +23,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         String login = authentication.getName();
-        User user = usersService.findByLogin(login).get();
+        User user = usersService.findByLogin(login);
         Long userId = user.getId();
-        if (user.getRole().equals("ROLE_USER")) {
-            getRedirectStrategy().sendRedirect(request, response, "/users/" + userId);
-        } else {
+        if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
             getRedirectStrategy().sendRedirect(request, response, "/users");
+        } else if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ROLE_USER"))) {
+            getRedirectStrategy().sendRedirect(request, response, "/users/" + userId);
         }
     }
 }

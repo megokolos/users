@@ -33,8 +33,10 @@ public class UsersServiceImp implements UsersService {
     }
 
     @Override
-    public Optional<User> findByLogin(String login) {
-        return usersRepository.findByLogin(login);
+    public User findByLogin(String login) {
+        User user = usersRepository.findByLogin(login);
+        user.getRoles().size();
+        return user;
     }
 
     @Transactional
@@ -56,10 +58,10 @@ public class UsersServiceImp implements UsersService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<User> optionalUser = usersRepository.findByLogin(login);
-        if (optionalUser.isEmpty()) {
+        User optionalUser = usersRepository.findByLogin(login);
+        if (optionalUser==null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new MyUserDetails(optionalUser.get());
+        return new MyUserDetails(optionalUser);
     }
 }

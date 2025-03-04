@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kolosov.CRUD.model.Role;
 import ru.kolosov.CRUD.model.User;
+import ru.kolosov.CRUD.service.RolesService;
 import ru.kolosov.CRUD.service.UsersService;
 
 
@@ -14,6 +16,9 @@ public class UsersController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private RolesService rolesService;
 
     @GetMapping
     public String showAll(Model model) {
@@ -34,7 +39,12 @@ public class UsersController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("user") User user) {
-        user.setRole("ROLE_USER");
+        Role userRole = rolesService.findByRole("ROLE_USER");
+        if (userRole==null) {
+            userRole = new Role("ROLE_USER");
+            rolesService.save(userRole);
+        }
+        user.getRoles().add(userRole);
         usersService.save(user);
         return "redirect:/users/" + user.getId();
     }
@@ -46,7 +56,18 @@ public class UsersController {
 
     @PostMapping("/new/admin")
     public String createAdmin(@ModelAttribute("user") User user) {
-        user.setRole("ROLE_ADMIN");
+        Role userRoleAdmin = rolesService.findByRole("ROLE_ADMIN");
+        if (userRoleAdmin==null) {
+            userRoleAdmin = new Role("ROLE_ADMIN");
+            rolesService.save(userRoleAdmin);
+        }
+        Role userRoleUser = rolesService.findByRole("ROLE_USER");
+        if (userRoleUser==null) {
+            userRoleUser = new Role("ROLE_USER");
+            rolesService.save(userRoleUser);
+        }
+        user.getRoles().add(userRoleAdmin);
+        user.getRoles().add(userRoleUser);
         usersService.save(user);
         return "redirect:/users";
     }
