@@ -32,7 +32,7 @@ public class UsersController {
         return "users/show";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String create(@ModelAttribute("user") User user) {
         usersService.save(user);
         return "redirect:/users";

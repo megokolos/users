@@ -1,19 +1,27 @@
 package ru.kolosov.CRUD.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.User;
 import ru.kolosov.CRUD.repository.UsersRepository;
+import ru.kolosov.CRUD.model.MyUserDetails;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class UsersServiceImp implements UsersService{
+public class UsersServiceImp implements UsersService {
+
     @Autowired
     private UsersRepository usersRepository;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
     public List<User> findAll() {
         return usersRepository.findAll();
@@ -24,8 +32,14 @@ public class UsersServiceImp implements UsersService{
         return usersRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return usersRepository.findByLogin(login);
+    }
+
     @Transactional
     public void save(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
     }
 
@@ -38,5 +52,14 @@ public class UsersServiceImp implements UsersService{
     @Transactional
     public void delete (Long id) {
         usersRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        Optional<User> optionalUser = usersRepository.findByLogin(login);
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new MyUserDetails(optionalUser.get());
     }
 }

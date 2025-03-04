@@ -16,3 +16,5 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+JWT:
+  secret: 'gdfghzhdfhdfhdfhdfh'

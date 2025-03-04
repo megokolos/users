@@ -23,4 +23,8 @@ public class User {
     private Integer age;
     @NonNull
     private String email;
+    @NonNull
+    private String login;
+    @NonNull
+    private String password;
 }
