@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.User;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface UsersService extends UserDetailsService{
 

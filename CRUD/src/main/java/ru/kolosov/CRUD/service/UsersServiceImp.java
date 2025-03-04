@@ -12,7 +12,7 @@ import ru.kolosov.CRUD.repository.UsersRepository;
 import ru.kolosov.CRUD.model.MyUserDetails;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional(readOnly = true)
