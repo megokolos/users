@@ -45,7 +45,7 @@
                     Edit User
                 </button>
 
-                <!-- Модальное окно редактирования -->
+
                 <div class="modal fade"
                      th:id="'editUserModal' + ${user.getId()}"
                      tabindex="-1"
@@ -131,7 +131,7 @@
                     Delete User
                 </button>
 
-                <!-- Модальное окно удаления (динамическое) -->
+
                 <div class="modal fade"
                      th:id="'deleteUserModal' + ${user.getId()}"
                      tabindex="-1"
@@ -157,7 +157,7 @@
                                     </li>
                                 </ul>
 
-                                <!-- Форма удаления -->
+
                                 <form th:action="@{/admin/users/{id}(id=${user.getId()})}" method="post">
                                     <input type="hidden" name="_method" value="delete">
                                     <div class="d-grid gap-2 mt-3">
