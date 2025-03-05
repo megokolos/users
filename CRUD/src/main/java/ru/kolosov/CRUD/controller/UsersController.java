@@ -9,6 +9,9 @@ import ru.kolosov.CRUD.model.User;
 import ru.kolosov.CRUD.service.RolesService;
 import ru.kolosov.CRUD.service.UsersService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Controller
 public class UsersController {
@@ -22,6 +25,7 @@ public class UsersController {
     @GetMapping("/admin/users")
     public String showAll(Model model) {
         model.addAttribute("users", usersService.findAll());
+        model.addAttribute("allRoles", rolesService.findAll());
         return "users/index";
     }
 

@@ -2,21 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Show</title>
+    <title>Users</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<p th:text="${'Login: ' + user.getLogin()}">VALUE</p>
-<p th:text="${user.getName() + ', ' + user.getLastName() + ', ' + user.getAge()}">VALUE</p>
-<p th:text="${'Email: ' + user.getEmail()}">VALUE</p>
-<p th:text="${user.getId()}">VALUE</p>
 
-<a th:href="@{/admin/users/{id}/edit(id=${user.getId()})}">Edit</a>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+<div class="container">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">User Details</h2>
 
-<form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})}">
-    <input type="submit" value="Delete"/>
-</form>
-<form th:action="@{/logout}" th:method="GET">
-    <input type="submit" value="Logout" />
-</form>
+        <div class="mb-3">
+            <strong>Login:</strong> <span th:text="${user.getLogin()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>Name:</strong> <span th:text="${user.getName()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>Last Name:</strong> <span th:text="${user.getLastName()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>Age:</strong> <span th:text="${user.getAge()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>Email:</strong> <span th:text="${user.getEmail()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>ID:</strong> <span th:text="${user.getId()}"></span>
+        </div>
+        <div class="mb-3">
+            <strong>Roles:</strong>
+            <span class="badge bg-primary me-1" th:each="role : ${user.getRoles()}" th:text="${role.getRole()}"></span>
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+            <form th:action="@{/logout}" th:method="GET">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
