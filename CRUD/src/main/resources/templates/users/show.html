@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
-
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -13,36 +14,80 @@
         <h2 class="text-center mb-4">User Details</h2>
 
         <div class="mb-3">
-            <strong>Login:</strong> <span th:text="${user.getLogin()}"></span>
+            <strong>Login:</strong> <span id="userLogin"></span>
         </div>
         <div class="mb-3">
-            <strong>Name:</strong> <span th:text="${user.getName()}"></span>
+            <strong>Name:</strong> <span id="userName"></span>
         </div>
         <div class="mb-3">
-            <strong>Last Name:</strong> <span th:text="${user.getLastName()}"></span>
+            <strong>Last Name:</strong> <span id="userLastName"></span>
         </div>
         <div class="mb-3">
-            <strong>Age:</strong> <span th:text="${user.getAge()}"></span>
+            <strong>Age:</strong> <span id="userAge"></span>
         </div>
         <div class="mb-3">
-            <strong>Email:</strong> <span th:text="${user.getEmail()}"></span>
+            <strong>Email:</strong> <span id="userEmail"></span>
         </div>
         <div class="mb-3">
-            <strong>ID:</strong> <span th:text="${user.getId()}"></span>
+            <strong>ID:</strong> <span id="userId"></span>
         </div>
         <div class="mb-3">
-            <strong>Roles:</strong>
-            <span class="badge bg-primary me-1" th:each="role : ${user.getRoles()}" th:text="${role.getRole()}"></span>
+            <strong>Roles:</strong> <span id="userRoles"></span>
         </div>
 
         <div class="d-grid gap-2 mt-4">
-            <form th:action="@{/logout}" th:method="GET">
+            <form action="/logout" method="GET">
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
         </div>
+
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        let csrfToken = $("meta[name='_csrf']").attr("content");
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+
+        const userId = window.location.pathname.split("/").pop();
+
+        if (!userId) {
+            alert("User ID not provided!");
+            return;
+        }
+
+        $.ajax({
+            url: `/api/users/${userId}`,
+            type: "GET",
+            dataType: "json",
+            success: function (user) {
+                $("#userLogin").text(user.login);
+                $("#userName").text(user.name);
+                $("#userLastName").text(user.lastName);
+                $("#userAge").text(user.age);
+                $("#userEmail").text(user.email);
+                $("#userId").text(user.id);
+
+
+                let rolesHtml = "";
+                user.roles.forEach(role => {
+                    rolesHtml += `<span class="badge bg-primary me-1">${role.role}</span>`;
+                });
+                $("#userRoles").html(rolesHtml);
+            },
+            error: function () {
+                alert("Ошибка загрузки данных пользователя");
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>

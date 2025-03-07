@@ -1,5 +1,9 @@
 package ru.kolosov.CRUD.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -44,8 +48,8 @@ public class User {
     @NonNull
     @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
-    @NonNull
-    @ToString.Exclude
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

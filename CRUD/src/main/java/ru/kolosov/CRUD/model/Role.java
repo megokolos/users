@@ -1,5 +1,9 @@
 package ru.kolosov.CRUD.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +26,7 @@ public class Role {
 
     @NonNull
     private String role;
-
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     private List<User> user = new ArrayList<>();;
 

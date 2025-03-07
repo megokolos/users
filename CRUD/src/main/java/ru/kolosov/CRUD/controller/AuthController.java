@@ -22,8 +22,5 @@ public class AuthController {
     public String logout() {
         return "/logInOut/login";
     }
-    @GetMapping("/hello")
-    public String hello() {
-        return "/users/hellotest";
-    }
+
 }

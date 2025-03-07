@@ -30,8 +30,7 @@ public class UsersController {
     }
 
     @GetMapping("/users/{id}")
-    public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", usersService.findById(id));
+    public String show() {
         return "users/show";
     }
 
