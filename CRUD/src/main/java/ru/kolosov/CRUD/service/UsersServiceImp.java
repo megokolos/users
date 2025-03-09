@@ -53,26 +53,36 @@ public class UsersServiceImp implements UsersService {
 
     @Transactional
     public void update(Long id, User updatedUser) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID пользователя не может быть null");
+        }
+
+        System.out.println("Обновление пользователя с ID: " + id); // Логируем ID
+        System.out.println("Данные пользователя: " + updatedUser); // Логируем данные
+
         User existingUser = usersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Обновляем поля пользователя
         existingUser.setLogin(updatedUser.getLogin());
         existingUser.setName(updatedUser.getName());
         existingUser.setLastName(updatedUser.getLastName());
         existingUser.setAge(updatedUser.getAge());
         existingUser.setEmail(updatedUser.getEmail());
 
-        // Шифруем пароль, если он был изменен
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
         }
 
-        // Обновляем роли
         if (updatedUser.getRoles() != null && !updatedUser.getRoles().isEmpty()) {
             Set<Role> updatedRoles = updatedUser.getRoles().stream()
-                    .map(role -> rolesRepository.findById(role.getId())
-                            .orElseThrow(() -> new RuntimeException("Role not found")))
+                    .map(role -> {
+                        if (role.getId() == null) {
+                            return rolesRepository.findByRole(role.getRole());
+                        } else {
+                            return rolesRepository.findById(role.getId())
+                                    .orElseThrow(() -> new RuntimeException("Role not found: " + role.getId()));
+                        }
+                    })
                     .collect(Collectors.toSet());
             existingUser.setRoles(updatedRoles);
         }

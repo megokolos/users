@@ -3,6 +3,7 @@ package ru.kolosov.CRUD.controller.RestControllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import ru.kolosov.CRUD.dto.UsersDTO;
 import ru.kolosov.CRUD.model.Role;
@@ -64,6 +65,10 @@ public class UsersRESTControllers {
     @PatchMapping("/{id}")
     public ResponseEntity<String> update(@RequestBody User user,
                          @PathVariable("id") Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body("ID пользователя не может быть null");
+        }
+
         usersService.update(id, user);
         return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
     }
@@ -78,5 +83,9 @@ public class UsersRESTControllers {
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = usersService.findById(id);
         return ResponseEntity.ok(user);
+    }
+    @GetMapping("/csrf")
+    public CsrfToken getCsrfToken(CsrfToken csrfToken) {
+        return csrfToken;
     }
 }

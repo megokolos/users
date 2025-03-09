@@ -25,8 +25,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = usersService.findByLogin(login);
         Long userId = user.getId();
         if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
+            System.out.println("Перенаправление админа на /admin/users");
             getRedirectStrategy().sendRedirect(request, response, "/admin/users");
         } else if (user.getRoles().stream().anyMatch(role -> role.getRole().equals("ROLE_USER"))) {
+            System.out.println("Перенаправление админа на /users" + userId);
             getRedirectStrategy().sendRedirect(request, response, "/users/" + userId);
         }
     }
