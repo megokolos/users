@@ -33,7 +33,7 @@ public class UsersRESTControllers {
 
     @PostMapping("/createUser")
     public ResponseEntity<String> createUser(@RequestBody User user) {
-        
+
         Role userRole = rolesService.findByRole("ROLE_USER");
         if (userRole == null) {
             userRole = new Role("ROLE_USER");
@@ -64,7 +64,7 @@ public class UsersRESTControllers {
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> update(@RequestBody User user,
-                         @PathVariable("id") Long id) {
+                                         @PathVariable("id") Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().body("ID пользователя не может быть null");
         }
@@ -84,6 +84,7 @@ public class UsersRESTControllers {
         User user = usersService.findById(id);
         return ResponseEntity.ok(user);
     }
+
     @GetMapping("/csrf")
     public CsrfToken getCsrfToken(CsrfToken csrfToken) {
         return csrfToken;

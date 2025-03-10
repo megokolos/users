@@ -57,8 +57,8 @@ public class UsersServiceImp implements UsersService {
             throw new IllegalArgumentException("ID пользователя не может быть null");
         }
 
-        System.out.println("Обновление пользователя с ID: " + id); // Логируем ID
-        System.out.println("Данные пользователя: " + updatedUser); // Логируем данные
+        System.out.println("Обновление пользователя с ID: " + id);
+        System.out.println("Данные пользователя: " + updatedUser);
 
         User existingUser = usersRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -72,7 +72,6 @@ public class UsersServiceImp implements UsersService {
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(bCryptPasswordEncoder.encode(updatedUser.getPassword()));
         }
-
         if (updatedUser.getRoles() != null && !updatedUser.getRoles().isEmpty()) {
             Set<Role> updatedRoles = updatedUser.getRoles().stream()
                     .map(role -> {
@@ -86,7 +85,6 @@ public class UsersServiceImp implements UsersService {
                     .collect(Collectors.toSet());
             existingUser.setRoles(updatedRoles);
         }
-
         usersRepository.save(existingUser);
     }
 

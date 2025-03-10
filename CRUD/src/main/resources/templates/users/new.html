@@ -61,13 +61,12 @@
         let csrfToken = null;
         let csrfHeader = 'X-CSRF-TOKEN';
 
-        // Получение CSRF-токена через API /csrf с использованием промисов
         function getCsrfToken() {
             return $.ajax({
                 url: '/api/users/csrf',
                 type: 'GET',
                 success: function (data) {
-                    csrfToken = data.token; // Сохраняем токен в переменной
+                    csrfToken = data.token;
                     console.log('CSRF-токен получен:', csrfToken);
                 },
                 error: function (xhr, status, error) {
@@ -76,7 +75,6 @@
             });
         }
 
-        // Установка CSRF-токена для всех AJAX-запросов
         $(document).ajaxSend(function (e, xhr) {
             if (csrfToken && csrfHeader) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -85,7 +83,6 @@
             }
         });
 
-        // Загружаем токен при старте
         getCsrfToken();
 
         $("#userForm").submit(function (event) {
@@ -103,7 +100,6 @@
 
             console.log("Sending data:", formData);
 
-            // Ждем получения токена перед отправкой запроса
             getCsrfToken().then(function () {
                 $.ajax({
                     type: "POST",

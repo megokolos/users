@@ -42,7 +42,6 @@
     $(document).ready(function() {
         let csrfToken = null;
 
-        // Получаем CSRF-токен и добавляем в форму
         function getCsrfToken() {
             $.get('/api/users/csrf', function(data) {
                 csrfToken = data.token;
@@ -54,7 +53,6 @@
         }
         getCsrfToken();
 
-        // Обработка кнопки выхода
         $('#logoutButton').on('click', function(e) {
             e.preventDefault();
 
