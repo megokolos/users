@@ -27,7 +27,9 @@
     </table>
 
     <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-info" onclick="openCreateModal()">Create new user</button>
+        <form action="/users/new" method="GET">
+            <button type="submit" class="btn btn-info">Создать нового пользователя</button>
+        </form>
         <form action="/logout" method="GET">
             <button type="submit" class="btn btn-danger">Logout</button>
         </form>
@@ -63,6 +65,29 @@
                     </select>
                     <button type="submit" class="btn btn-success mt-3">Update</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Login:</strong> <span id="deleteLogin"></span></p>
+                <p><strong>Name:</strong> <span id="deleteName"></span></p>
+                <p><strong>Last Name:</strong> <span id="deleteLastName"></span></p>
+                <p><strong>Age:</strong> <span id="deleteAge"></span></p>
+                <p><strong>Email:</strong> <span id="deleteEmail"></span></p>
+                <input type="hidden" id="deleteUserId"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteUser()">Delete</button>
             </div>
         </div>
     </div>
@@ -121,7 +146,7 @@
                             <td>${roles}</td>
                             <td>
                                 <button class="btn btn-warning" onclick="openEditModal(${user.id})">Edit</button>
-                                <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                                <button class="btn btn-danger" onclick="openDeleteModal(${user.id})">Delete</button>
                             </td>
                         </tr>
                     `);
@@ -203,8 +228,32 @@
         });
     });
 
-    function deleteUser(userId) {
-        if (!confirm("Вы уверены, что хотите удалить пользователя?")) {
+    function openDeleteModal(userId) {
+        $.ajax({
+            url: `/api/users/${userId}`,
+            type: "GET",
+            success: function (user) {
+                $("#deleteUserId").val(user.id);
+                $("#deleteLogin").text(user.login);
+                $("#deleteName").text(user.name);
+                $("#deleteLastName").text(user.lastName);
+                $("#deleteAge").text(user.age);
+                $("#deleteEmail").text(user.email);
+
+                $("#deleteUserModal").modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.error("Ошибка загрузки данных пользователя:", status, error);
+                alert("Ошибка загрузки данных пользователя");
+            }
+        });
+    }
+
+    function confirmDeleteUser() {
+        let userId = Number($("#deleteUserId").val());
+
+        if (!userId) {
+            alert("Ошибка: ID пользователя отсутствует.");
             return;
         }
 
@@ -213,6 +262,7 @@
                 url: `/api/users/${userId}`,
                 type: "DELETE",
                 success: function () {
+                    $("#deleteUserModal").modal("hide");
                     loadUsers();
                 },
                 error: function (xhr, status, error) {
@@ -223,9 +273,6 @@
         });
     }
 
-    function openCreateModal() {
-        alert("Функция создания пользователя пока не реализована!");
-    }
 </script>
 
 </body>
