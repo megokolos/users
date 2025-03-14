@@ -8,12 +8,12 @@ services:
       POSTGRES_USER: ${DB_LOGIN_DOCKER}
       POSTGRES_PASSWORD: ${DB_PASSWORD_DOCKER}
     ports:
-      - "5432:5432"
+      - "5120:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
 
   app:
-    image: spring-boot-web:latest
+    image: megokolos/spring-boot-web:latest
     container_name: my_app
     depends_on:
       - database
@@ -21,8 +21,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME_DOCKER}
       SPRING_DATASOURCE_USERNAME: ${DB_LOGIN_DOCKER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD_DOCKER}
+      ENVIRONMENT: ${ENVIRONMENT}
     ports:
-      - "8080:8080"
+      - "2507:8080"
 
 volumes:
   pg_data:

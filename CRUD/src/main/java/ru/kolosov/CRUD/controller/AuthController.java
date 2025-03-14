@@ -10,17 +10,17 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "/logInOut/login";
+        return "logInOut/login";
     }
 
     @GetMapping("/logout")
     public String logoutForm() {
-        return "/logInOut/logout";
+        return "logInOut/logout";
     }
 
     @PostMapping("/logout")
     public String logout() {
-        return "/logInOut/login";
+        return "logInOut/login";
     }
 
 }
