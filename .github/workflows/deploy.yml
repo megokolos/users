@@ -18,7 +18,7 @@ jobs:
 
       - name: Сборка и пуш Docker-образа
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest -f CRUD/Dockerfile CRUD/
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest
 
       - name: Copy docker-compose and env file to server
