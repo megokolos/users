@@ -21,8 +21,11 @@ jobs:
 
       - name: Сборка JAR-файла
         run: |
+          echo "Сборка JAR-файла..."
           mvn -B install --file CRUD/pom.xml
           mvn -B package --file CRUD/pom.xml
+          echo "Проверка наличия JAR-файла..."
+          ls -l CRUD/target/
 
       - name: Установка Docker Compose
         run: |
@@ -44,7 +47,9 @@ jobs:
 
       - name: Сборка Docker-образа
         run: |
+          echo "Сборка Docker-образа..."
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest -f CRUD/Dockerfile .
+          echo "Сборка завершена."
 
       - name: Пуш Docker-образа на Docker Hub
         run: |
