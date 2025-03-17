@@ -44,7 +44,7 @@ jobs:
 
       - name: Сборка Docker-образа
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest -f CRUD/Dockerfile .
 
       - name: Пуш Docker-образа на Docker Hub
         run: |
