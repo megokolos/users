@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004
+      author: Alex_Kolosov
+      changes:
+        - renameColumn:
+            tableName: roles
+            newColumnName: role
+            oldColumnName: name

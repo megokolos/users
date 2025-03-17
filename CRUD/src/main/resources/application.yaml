@@ -11,7 +11,7 @@ spring:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   mvc:
     hiddenmethod:
       filter:
@@ -19,9 +19,10 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
 JWT:
   secret: 'gdfghzhdfhdfhdfhdfh'
-logging:
-  level:
-    org.thymeleaf: DEBUG
+
 
