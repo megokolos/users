@@ -51,6 +51,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "CRUD/docker-compose.yml,.env"
           target: "/home/${{ secrets.SERVER_USER }}/"
+          overwrite: true
 
       - name: Деплой на сервере
         uses: appleboy/ssh-action@v0.1.7
