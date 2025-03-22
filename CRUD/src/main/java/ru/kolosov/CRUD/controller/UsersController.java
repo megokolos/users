@@ -6,11 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kolosov.CRUD.model.Role;
 import ru.kolosov.CRUD.model.User;
-import ru.kolosov.CRUD.service.RolesService;
-import ru.kolosov.CRUD.service.UsersService;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.kolosov.CRUD.service.crud.RolesService;
+import ru.kolosov.CRUD.service.crud.UsersService;
 
 
 @Controller

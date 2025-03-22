@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.controller.RestControllers;
+package ru.kolosov.CRUD.controller.RestControllers.User;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,18 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kolosov.CRUD.dto.RolesDTO;
 import ru.kolosov.CRUD.dto.UsersDTO;
 import ru.kolosov.CRUD.model.Role;
 import ru.kolosov.CRUD.model.User;
-import ru.kolosov.CRUD.service.RolesService;
-import ru.kolosov.CRUD.service.UsersService;
+import ru.kolosov.CRUD.service.crud.RolesService;
+import ru.kolosov.CRUD.service.crud.UsersService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController

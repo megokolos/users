@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.service;
+package ru.kolosov.CRUD.service.crud;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,7 +9,7 @@ import ru.kolosov.CRUD.model.User;
 import java.util.List;
 
 
-public interface UsersService extends UserDetailsService{
+public interface UsersService extends UserDetailsService {
 
     List<User> findAll();
 
@@ -26,5 +26,5 @@ public interface UsersService extends UserDetailsService{
     void update(Long id, User updatedPerson);
 
     @Transactional
-    void delete (Long id);
+    void delete(Long id);
 }

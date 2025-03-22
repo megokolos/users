@@ -23,6 +23,19 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
 JWT:
-  secret: 'gdfghzhdfhdfhdfhdfh'
-
-
+  secret: 'nhfgbotuernfvcadgs'
+weather:
+  api_url: 'https://api.weather.yandex.ru/v2/forecast'
+  key: ${WEATHER_API_KEY}
+dadata:
+  api_key: ${DADATA_API_KEY}
+  secret: ${DADATA_SECRET_KEY}
+  url: 'https://cleaner.dadata.ru/api/v1/clean/address'
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+telegram_bot:
+  name: 'JavaTestStudyBot'
+  token: ${TELEGRAM_TOKEN}

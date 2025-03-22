@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.service;
+package ru.kolosov.CRUD.service.crud;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.Role;
@@ -18,5 +18,5 @@ public interface RolesService {
     void update(Long id, Role role);
 
     @Transactional
-    void delete (Long id);
+    void delete(Long id);
 }

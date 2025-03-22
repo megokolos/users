@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.service;
+package ru.kolosov.CRUD.service.crud;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -96,7 +96,7 @@ public class UsersServiceImp implements UsersService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User optionalUser = usersRepository.findByLogin(login);
-        if (optionalUser==null) {
+        if (optionalUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return new MyUserDetails(optionalUser);

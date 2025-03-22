@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import ru.kolosov.CRUD.model.User;
-import ru.kolosov.CRUD.service.UsersService;
+import ru.kolosov.CRUD.service.crud.UsersService;
 
 import java.io.IOException;
 

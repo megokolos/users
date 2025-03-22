@@ -2,6 +2,8 @@ package ru.kolosov.CRUD;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class CrudApplication {
@@ -10,4 +12,8 @@ public class CrudApplication {
 		SpringApplication.run(CrudApplication.class, args);
 	}
 
+	@Bean
+	public RestTemplate getRestTemplate() {
+		return new RestTemplate();
+	}
 }

@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.service;
+package ru.kolosov.CRUD.service.crud;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class RolesServiceImp implements RolesService{
+public class RolesServiceImp implements RolesService {
 
     @Autowired
     private RolesRepository rolesRepository;
