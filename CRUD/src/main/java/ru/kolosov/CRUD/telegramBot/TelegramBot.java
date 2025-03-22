@@ -35,6 +35,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 SendMessage sendMessage = new SendMessage(chatId.toString(), "Введите свой город, комфортную температуру и скорость ветра");
                 try {
                     execute(sendMessage);
+                    return;
                 } catch (TelegramApiException e) {
                     System.out.println("Не удалось отправить сообщение");
                 }

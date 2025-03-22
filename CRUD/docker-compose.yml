@@ -17,6 +17,8 @@ services:
     container_name: my_app
     depends_on:
       - database
+    env_file:
+      - /home/mega/.env
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME_DOCKER}
       SPRING_DATASOURCE_USERNAME: ${DB_LOGIN_DOCKER}
