@@ -22,6 +22,7 @@ jobs:
           echo "DADATA_SECRET_KEY=${{ secrets.DADATA_SECRET_KEY }}" >> .env
           echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> .env
           echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> .env
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
 
       - name: Копирование docker-compose.yml
         run: |
@@ -60,5 +61,5 @@ jobs:
           script: |
             docker-compose down
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-web:latest
-            docker-compose up -d --build
+            docker-compose --env-file /home/mega/.env up -d
             docker image prune -f
