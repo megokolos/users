@@ -10,6 +10,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.kolosov.CRUD.dto.WeatherDTO;
 import ru.kolosov.CRUD.service.weather.WeatherService;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -31,47 +34,58 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String text = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
+
             if ("/start".equals(text)) {
-                SendMessage sendMessage = new SendMessage(chatId.toString(), "Введите свой город, комфортную температуру и скорость ветра");
-                try {
-                    execute(sendMessage);
-                    return;
-                } catch (TelegramApiException e) {
-                    System.out.println("Не удалось отправить сообщение");
-                }
+                sendTextMessage(chatId, "Введите свой город, комфортную температуру и скорость ветра.\nПример: Нижний Новгород 15 5");
+                return;
             }
-            String[] cityAndTemperature = text.split(" ");
-            String city = cityAndTemperature[0];
-            Double goodTemperature = Double.parseDouble(cityAndTemperature[1]);
-            Double goodWindSpeed = Double.parseDouble(cityAndTemperature[2]);
+
+            Pattern pattern = Pattern.compile("^(.+?)\\s(-?\\d+(?:\\.\\d+)?)\\s(-?\\d+(?:\\.\\d+)?)$");
+            Matcher matcher = pattern.matcher(text);
+
+            if (!matcher.matches()) {
+                sendTextMessage(chatId, "Ошибка! Введите данные в формате: Город Температура Скорость_ветра\nПример: Нижний Новгород 15 5");
+                return;
+            }
+
+            String city = matcher.group(1);
+            double goodTemperature = Double.parseDouble(matcher.group(2));
+            double goodWindSpeed = Double.parseDouble(matcher.group(3));
+
             WeatherDTO weatherDTO = weatherService.getWeather(city);
-            if (weatherDTO.getFact().getTemp() < goodTemperature || weatherDTO.getFact().getWind_speed() > goodWindSpeed) {
-                SendMessage sendMessage = new SendMessage(chatId.toString(), "Сегодня не подходящий день для прогулок");
-                try {
-                    execute(sendMessage);
-                    return;
-                } catch (TelegramApiException e) {
-                    System.out.println("Не удалось отправить сообщение");
-                }
+            if (weatherDTO == null || weatherDTO.getFact() == null) {
+                sendTextMessage(chatId, "Не удалось получить данные о погоде для " + city);
+                return;
             }
-            StringBuilder textToSend = new StringBuilder("Подходящее время, температура и скорость ветра:").append("\n");
+
+            if (weatherDTO.getFact().getTemp() < goodTemperature || weatherDTO.getFact().getWind_speed() > goodWindSpeed) {
+                sendTextMessage(chatId, "Сегодня не подходящий день для прогулок в " + city);
+                return;
+            }
+
+            StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")
+                    .append(city)
+                    .append(":\n");
+
             for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
                 if (hour.getTemp() >= goodTemperature && hour.getWind_speed() <= goodWindSpeed) {
-                    textToSend.append(hour.getHour()).append(" hours")
-                            .append(" - ")
-                            .append(hour.getTemp()).append(" degree, ")
-                            .append("wind speed ").append(hour.getWind_speed()).append("m/s")
-                            .append("\n");
+                    textToSend.append(hour.getHour()).append(":00 - ")
+                            .append(hour.getTemp()).append("°C, ")
+                            .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
                 }
             }
-            SendMessage sendMessage = new SendMessage(chatId.toString(), textToSend.toString());
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                System.out.println("Не удалось отправить сообщение");
-            }
+            sendTextMessage(chatId, textToSend.toString());
         }
     }
+
+    private void sendTextMessage(Long chatId, String text) {
+        try {
+            execute(new SendMessage(chatId.toString(), text));
+        } catch (TelegramApiException e) {
+            System.out.println("Не удалось отправить сообщение: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public String getBotUsername() {
