@@ -2,14 +2,18 @@ package ru.kolosov.CRUD.telegramBot;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.kolosov.CRUD.dto.WeatherDTO;
+import ru.kolosov.CRUD.model.TelegramUser;
+import ru.kolosov.CRUD.service.telegram.TelegramService;
 import ru.kolosov.CRUD.service.weather.WeatherService;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +25,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private WeatherService weatherService;
+
+    @Autowired
+    TelegramService telegramService;
 
     public TelegramBot(@Value("${telegram_bot.name}") String botName,
                        @Value("${telegram_bot.token}") String botToken) {
@@ -51,6 +58,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             String city = matcher.group(1);
             double goodTemperature = Double.parseDouble(matcher.group(2));
             double goodWindSpeed = Double.parseDouble(matcher.group(3));
+
+            TelegramUser telegramUser = new TelegramUser(city, goodTemperature, goodWindSpeed);
+            telegramService.save(telegramUser);
+
+            sendTextMessage(chatId, "Предпочтения сохранены, вам будут присылать проноз погоды каждый день в 12 часов");
+
 
             WeatherDTO weatherDTO = weatherService.getWeather(city);
             if (weatherDTO == null || weatherDTO.getFact() == null) {
@@ -86,6 +99,27 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    @Scheduled(cron = "0 0 12 * * ?")
+    private void autoSend() {
+        List<TelegramUser> allusers = telegramService.findAll();
+
+        for (TelegramUser telegramUser : allusers) {
+            Long chatId = telegramUser.getId();
+            WeatherDTO weatherDTO = weatherService.getWeather(telegramUser.getCity());
+
+            StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")
+                    .append(telegramUser.getCity())
+                    .append(":\n");
+            for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
+                if (hour.getTemp() >= telegramUser.getGoodTemperature() && hour.getWind_speed() <= telegramUser.getGoodWindSpeed()) {
+                    textToSend.append(hour.getHour()).append(":00 - ")
+                            .append(hour.getTemp()).append("°C, ")
+                            .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
+                }
+            }
+            sendTextMessage(chatId, textToSend.toString());
+        }
+    }
 
     @Override
     public String getBotUsername() {

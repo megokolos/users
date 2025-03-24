@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005
+      author: Alex_Kolosov
+      changes:
+        - createTable:
+            tableName: telegram
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: good_temperature
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: good_wind_speed
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
