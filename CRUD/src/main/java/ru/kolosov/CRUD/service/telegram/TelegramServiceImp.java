@@ -20,7 +20,16 @@ public class TelegramServiceImp implements TelegramService{
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void save(TelegramUser telegramUser) {
-    telegramRepository.save(telegramUser);
+        Optional<TelegramUser> user = telegramRepository.findById(telegramUser.getChatId());
+        if(user.isPresent()) {
+            TelegramUser userToUpdate = user.get();
+            userToUpdate.setCity(telegramUser.getCity());
+            userToUpdate.setGoodTemperature(telegramUser.getGoodTemperature());
+            userToUpdate.setGoodWindSpeed(telegramUser.getGoodWindSpeed());
+            telegramRepository.save(userToUpdate);
+        } else {
+            telegramRepository.save(telegramUser);
+        }
     }
 
     @Override
