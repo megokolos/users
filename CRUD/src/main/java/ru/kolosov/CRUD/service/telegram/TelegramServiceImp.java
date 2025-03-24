@@ -2,6 +2,7 @@ package ru.kolosov.CRUD.service.telegram;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.TelegramUser;
 import ru.kolosov.CRUD.repository.TelegramRepository;
@@ -17,13 +18,14 @@ public class TelegramServiceImp implements TelegramService{
     TelegramRepository telegramRepository;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void save(TelegramUser telegramUser) {
     telegramRepository.save(telegramUser);
     }
 
     @Override
     public TelegramUser getUser(Long chatId) {
-        return telegramRepository.getReferenceById(chatId);
+        return telegramRepository.findById(chatId).orElse(null);
     }
 
     @Override
