@@ -14,8 +14,8 @@ import lombok.*;
 public class TelegramUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "chat_id")
+    private Long chatId;
 
     @NonNull
     private String city;
@@ -27,4 +27,7 @@ public class TelegramUser {
     @NonNull
     @Column(name = "good_wind_speed")
     private Double goodWindSpeed;
+
+    @Version
+    private Long version;
 }

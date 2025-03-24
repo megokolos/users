@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006
+      author: Alex_Kolosov
+      comment: "Очистка таблицы перед изменениями"
+      changes:
+        - delete:
+            tableName: telegram
+
+  - changeSet:
+      id: 007
+      author: Alex_Kolosov
+      comment: "Добавление chat_id и version"
+      changes:
+        - dropPrimaryKey:
+            tableName: telegram
+        - addColumn:
+            tableName: telegram
+            columns:
+              - column:
+                  name: chat_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
