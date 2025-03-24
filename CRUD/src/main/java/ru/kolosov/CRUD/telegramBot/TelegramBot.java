@@ -59,7 +59,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             double goodTemperature = Double.parseDouble(matcher.group(2));
             double goodWindSpeed = Double.parseDouble(matcher.group(3));
 
-            TelegramUser telegramUser = new TelegramUser(city, goodTemperature, goodWindSpeed);
+            TelegramUser telegramUser = new TelegramUser(chatId, city, goodTemperature, goodWindSpeed);
             telegramService.save(telegramUser);
 
             sendTextMessage(chatId, "Предпочтения сохранены, вам будут присылать проноз погоды каждый день в 12 часов");
