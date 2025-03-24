@@ -104,7 +104,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<TelegramUser> allusers = telegramService.findAll();
 
         for (TelegramUser telegramUser : allusers) {
-            Long chatId = telegramUser.getId();
+            Long chatId = telegramUser.getChatId();
             WeatherDTO weatherDTO = weatherService.getWeather(telegramUser.getCity());
 
             StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")

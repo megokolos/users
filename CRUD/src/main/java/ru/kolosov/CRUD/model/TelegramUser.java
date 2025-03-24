@@ -15,6 +15,7 @@ public class TelegramUser {
 
     @Id
     @Column(name = "chat_id")
+    @NonNull
     private Long chatId;
 
     @NonNull
