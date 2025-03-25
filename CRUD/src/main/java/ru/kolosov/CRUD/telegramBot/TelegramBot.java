@@ -99,7 +99,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 9 * * ?")
     private void autoSend() {
         List<TelegramUser> allusers = telegramService.findAll();
 
