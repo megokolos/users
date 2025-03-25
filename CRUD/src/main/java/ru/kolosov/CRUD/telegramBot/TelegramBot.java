@@ -82,7 +82,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
                 if (hour.getTemp() >= goodTemperature && hour.getWind_speed() <= goodWindSpeed) {
-                    textToSend.append(hour.getHour()).append(":00 - ")
+                    textToSend.append(hour.getHour()).append(":00  ")
                             .append(hour.getTemp()).append("°C, ")
                             .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
                 }
@@ -112,7 +112,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     .append(":\n");
             for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
                 if (hour.getTemp() >= telegramUser.getGoodTemperature() && hour.getWind_speed() <= telegramUser.getGoodWindSpeed()) {
-                    textToSend.append(hour.getHour()).append(":00 - ")
+                    textToSend.append(hour.getHour()).append(":00  ")
                             .append(hour.getTemp()).append("°C, ")
                             .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
                 }
