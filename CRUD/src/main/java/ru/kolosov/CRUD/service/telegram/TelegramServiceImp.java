@@ -1,6 +1,8 @@
 package ru.kolosov.CRUD.service.telegram;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +40,8 @@ public class TelegramServiceImp implements TelegramService{
     }
 
     @Override
-    public List<TelegramUser> findAll() {
-        return telegramRepository.findAll();
+    public Page<TelegramUser> findAll(Pageable pageable) {
+        return telegramRepository.findAll(pageable);
     }
 
 }

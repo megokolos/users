@@ -2,6 +2,8 @@ package ru.kolosov.CRUD.telegramBot;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,8 +16,7 @@ import ru.kolosov.CRUD.service.telegram.TelegramService;
 import ru.kolosov.CRUD.service.weather.WeatherService;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -28,6 +29,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     TelegramService telegramService;
+
+    @Autowired
+    TelegramSteps telegramSteps;
 
     public TelegramBot(@Value("${telegram_bot.name}") String botName,
                        @Value("${telegram_bot.token}") String botToken) {
@@ -43,51 +47,19 @@ public class TelegramBot extends TelegramLongPollingBot {
             Long chatId = update.getMessage().getChatId();
 
             if ("/start".equals(text)) {
-                sendTextMessage(chatId, "Введите свой город, комфортную температуру и скорость ветра.\nПример: Нижний Новгород 15 5");
+                telegramSteps.resetUserInput(chatId);
+                sendTextMessage(chatId, "Введите ваш город:");
                 return;
             }
 
-            Pattern pattern = Pattern.compile("^(.+?)\\s(-?\\d+(?:\\.\\d+)?)\\s(-?\\d+(?:\\.\\d+)?)$");
-            Matcher matcher = pattern.matcher(text);
-
-            if (!matcher.matches()) {
-                sendTextMessage(chatId, "Ошибка! Введите данные в формате: Город Температура Скорость_ветра\nПример: Нижний Новгород 15 5");
+            if ("/reset".equals(text)) {
+                telegramSteps.resetUserInput(chatId);
+                sendTextMessage(chatId, "Ввод сброшен! Введите ваш город:");
                 return;
             }
+            String response = telegramSteps.userInputStep(chatId, text);
+            sendTextMessage(chatId, response);
 
-            String city = matcher.group(1);
-            double goodTemperature = Double.parseDouble(matcher.group(2));
-            double goodWindSpeed = Double.parseDouble(matcher.group(3));
-
-            TelegramUser telegramUser = new TelegramUser(chatId, city, goodTemperature, goodWindSpeed);
-            telegramService.save(telegramUser);
-
-            sendTextMessage(chatId, "Предпочтения сохранены, вам будут присылать проноз погоды каждый день в 12 часов");
-
-
-            WeatherDTO weatherDTO = weatherService.getWeather(city);
-            if (weatherDTO == null || weatherDTO.getFact() == null) {
-                sendTextMessage(chatId, "Не удалось получить данные о погоде для " + city);
-                return;
-            }
-
-            if (weatherDTO.getFact().getTemp() < goodTemperature || weatherDTO.getFact().getWind_speed() > goodWindSpeed) {
-                sendTextMessage(chatId, "Сегодня не подходящий день для прогулок в " + city);
-                return;
-            }
-
-            StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")
-                    .append(city)
-                    .append(":\n");
-
-            for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
-                if (hour.getTemp() >= goodTemperature && hour.getWind_speed() <= goodWindSpeed) {
-                    textToSend.append(hour.getHour()).append(":00  ")
-                            .append(hour.getTemp()).append("°C, ")
-                            .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
-                }
-            }
-            sendTextMessage(chatId, textToSend.toString());
         }
     }
 
@@ -101,24 +73,30 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Scheduled(cron = "0 0 9 * * ?")
     private void autoSend() {
-        List<TelegramUser> allusers = telegramService.findAll();
+        int page = 0;
+        int size = 100;
+        Page<TelegramUser> telegramUserPage;
+        do {
+            telegramUserPage = telegramService.findAll(PageRequest.of(page, size));
+            List<TelegramUser> allusers = telegramUserPage.getContent();
 
-        for (TelegramUser telegramUser : allusers) {
-            Long chatId = telegramUser.getChatId();
-            WeatherDTO weatherDTO = weatherService.getWeather(telegramUser.getCity());
+            for (TelegramUser telegramUser : allusers) {
+                Long chatId = telegramUser.getChatId();
+                WeatherDTO weatherDTO = weatherService.getWeather(telegramUser.getCity());
 
-            StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")
-                    .append(telegramUser.getCity())
-                    .append(":\n");
-            for (WeatherDTO.Hour hour : weatherDTO.getForecasts().get(0).getHours()) {
-                if (hour.getTemp() >= telegramUser.getGoodTemperature() && hour.getWind_speed() <= telegramUser.getGoodWindSpeed()) {
-                    textToSend.append(hour.getHour()).append(":00  ")
-                            .append(hour.getTemp()).append("°C, ")
-                            .append("ветер ").append(hour.getWind_speed()).append(" м/с\n");
-                }
+                StringBuilder textToSend = new StringBuilder("Подходящее время для прогулок в ")
+                        .append(telegramUser.getCity())
+                        .append(":\n");
+
+                weatherDTO.getForecasts().get(0).getHours().stream()
+                        .forEach(x -> textToSend.append(x.getHour()).append(":00  ")
+                                .append(x.getTemp()).append("°C, ")
+                                .append("ветер ").append(x.getWind_speed()).append(" м/с\n"));
+
+                sendTextMessage(chatId, textToSend.toString());
+                page++;
             }
-            sendTextMessage(chatId, textToSend.toString());
-        }
+        } while (!telegramUserPage.isLast());
     }
 
     @Override

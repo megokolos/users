@@ -1,4 +1,4 @@
-package ru.kolosov.CRUD.Freign;
+package ru.kolosov.CRUD.dto;
 
 import lombok.Data;
 

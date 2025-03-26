@@ -1,5 +1,7 @@
 package ru.kolosov.CRUD.service.telegram;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kolosov.CRUD.model.TelegramUser;
 
@@ -13,5 +15,5 @@ public interface TelegramService {
 
     TelegramUser getUser(Long chatId);
 
-    List<TelegramUser> findAll();
+    Page<TelegramUser> findAll(Pageable pageable);
 }

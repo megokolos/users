@@ -3,7 +3,7 @@ package ru.kolosov.CRUD.service.Windy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kolosov.CRUD.Freign.FreignWeatherClient;
-import ru.kolosov.CRUD.Freign.WindyResponse;
+import ru.kolosov.CRUD.dto.WindyResponse;
 import ru.kolosov.CRUD.dto.WindyDTO;
 
 

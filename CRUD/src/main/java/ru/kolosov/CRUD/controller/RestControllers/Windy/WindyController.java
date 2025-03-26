@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kolosov.CRUD.Freign.WindyResponse;
+import ru.kolosov.CRUD.dto.WindyResponse;
 import ru.kolosov.CRUD.service.Windy.WindyService;
 
 @RestController

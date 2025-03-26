@@ -31,4 +31,8 @@ public class TelegramUser {
 
     @Version
     private Long version;
+
+    public TelegramUser(@NonNull Long chatId) {
+        this.chatId = chatId;
+    }
 }
