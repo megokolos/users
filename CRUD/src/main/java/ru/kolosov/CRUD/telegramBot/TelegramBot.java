@@ -89,6 +89,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         .append(":\n");
 
                 weatherDTO.getForecasts().get(0).getHours().stream()
+                        .filter(x -> x.getTemp() >= telegramUser.getGoodTemperature() && x.getWind_speed() <= telegramUser.getGoodWindSpeed())
                         .forEach(x -> textToSend.append(x.getHour()).append(":00  ")
                                 .append(x.getTemp()).append("°C, ")
                                 .append("ветер ").append(x.getWind_speed()).append(" м/с\n"));
